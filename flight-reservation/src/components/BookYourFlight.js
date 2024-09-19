@@ -1,16 +1,23 @@
-import {  PlaneLanding, PlaneTakeoff } from "lucide-react";
+import { PlaneLanding, PlaneTakeoff } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+
 
 const BookYourFlight = () => {
+  const destinations = useSelector((state) => state.destinationReducer.destinations);
   const [flightType, setFlightType] = useState("round-trip");
+  const [selectedFrom, setSelectedFrom] = useState("");
+  const [selectedTo, setSelectedTo] = useState("");
 
+  
+  
   return (
     <div className="bg-white p-6 mx-4 rounded-lg shadow-lg mb-8">
       <div className="flex flex-col sm:flex-row items-center justify-between">
-        <div className="flex flex-row gap-2 items-center ">
-        <FontAwesomeIcon icon={faPlane} size="xl" />{" "}
+        <div className="flex flex-row gap-2 items-center">
+          <FontAwesomeIcon icon={faPlane} size="xl" />
           <h2 className="text-2xl font-bold">BOOK YOUR FLIGHT</h2>
         </div>
         <div className="flex bg-gray-300 border-gray-300 rounded-[1rem]">
@@ -38,24 +45,41 @@ const BookYourFlight = () => {
         <div className="flex flex-col sm:flex-row flex-1 gap-2">
           <div className="flex flex-row flex-1 p-2 h-10 border border-gray-300 sm:rounded-l-[100px] items-center">
             <PlaneTakeoff size={20} color="#6a1b9a" />
-            <input
-              type="text"
-              placeholder="From"
+            <select
+              value={selectedFrom}
+              onChange={(e) => setSelectedFrom(e.target.value)}
               className="ml-2 w-full outline-none"
-            />
+            >
+              <option value="" disabled>
+                From
+              </option>
+              {destinations.destinations.map((airport) => (
+                <option key={airport.id} value={airport.city}>
+                  {airport.city},{airport.country}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="flex flex-row p-2 h-10 border border-gray-300 sm:rounded-r-[100px] items-center">
+          <div className="flex flex-row flex-1 p-2 h-10 border border-gray-300 sm:rounded-r-[100px] items-center">
             <PlaneLanding size={20} color="#6a1b9a" />
-            <input
-              type="text"
-              placeholder="To"
+            <select
+              value={selectedTo}
+              onChange={(e) => setSelectedTo(e.target.value)}
               className="ml-2 w-full outline-none"
-            />
+            >
+              <option value="" disabled>
+                To
+              </option>
+              {destinations.destinations.map((airport) => (
+                <option key={airport.id} value={airport.city}>
+                  {airport.city},{airport.country}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
-        
         <div className="flex flex-col sm:flex-row flex-1 gap-2">
           <div className="flex flex-1 p-2 h-10 border border-gray-300 sm:rounded-l-[100px] items-center">
             <input
