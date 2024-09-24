@@ -11,7 +11,7 @@ export const fetchAircraft = () => {
   
       try {
         console.log("API isteği başlatılıyor...");
-        const response = await api.get('/aircrafts');
+        const response = await api.get('/aircraft-types');
   
         dispatch({ type: FETCH_AIRCRAFT_SUCCESS, payload: response.data });
         console.log("aircrafts", response.data);

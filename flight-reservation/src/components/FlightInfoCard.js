@@ -2,8 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlane } from "@fortawesome/free-solid-svg-icons";
 import { PlaneLanding, PlaneTakeoff } from "lucide-react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { bookFlightToDb } from "../store/actions/bookflightAction";
 
-// Zaman formatlama yardımcı fonksiyonu
+
 const formatDate = (dateString) => {
   const options = {
     weekday: "short",
@@ -17,6 +19,7 @@ const formatDate = (dateString) => {
 };
 
 const FlightInfoCard = ({
+  flight,
   departureAirport,
   departureTime,
   arrivalAirport,
@@ -24,10 +27,16 @@ const FlightInfoCard = ({
   flightDuration,
   price,
 }) => {
+const dispatch = useDispatch();
+
+const handleFligth = () => {
+    dispatch(bookFlightToDb(flight,'1'));
+}
+
   return (
     <div className="flex flex-col relative m-4 p-5 border-b border-gray-200 bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="text-lg font-semibold mb-2">
-        {departureAirport} to {arrivalAirport}
+        {departureAirport} to {arrivalAirport.city}
       </div>
 
       <div className="text-m font-semibold mb-4">
@@ -42,10 +51,10 @@ const FlightInfoCard = ({
             <span className="text-gray-900">Airport: ({departureAirport})</span>
           </div>
           <hr className="w-1/12 my-auto border-gray-400" />
-          {/* Uçuş Süresi ve Simge */}
+          {/* Uçuş Süresi */}
           <div className="flex flex-col items-center">
             <FontAwesomeIcon icon={faPlane} size="m" />{" "}
-            <span className="text-gray-900">{flightDuration}</span>
+            <span className="text-gray-900">{flightDuration} minute</span>
           </div>
 
           <hr className=" w-1/12 my-auto  border-gray-400" />
@@ -58,7 +67,7 @@ const FlightInfoCard = ({
             </div>
 
             <span className="text-gray-900">{formatDate(arrivalTime)}</span>
-            <span className="text-gray-900">Airport: ({arrivalAirport})</span>
+            <span className="text-gray-900">Airport: ({arrivalAirport.iata})</span>
           </div>
         </div>
       </div>
@@ -66,7 +75,7 @@ const FlightInfoCard = ({
       {/* Fiyat Bilgisi */}
       <div className="flex flex-row border-gray-200 justify-between items-center">
         <span className="text-lg font-bold text-[#6a1b9a]">{price}</span>
-        <button className="bg-[#6a1b9a] text-white px-4 py-2 rounded-lg">
+        <button onClick={handleFligth} className="bg-[#6a1b9a] text-white px-4 py-2 rounded-lg">
           Book Flight
         </button>
       </div>

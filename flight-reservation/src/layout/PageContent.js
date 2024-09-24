@@ -8,7 +8,8 @@ const PageContent = () => {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="my-reservations" element={<div><Reservations/></div>} />
+            <Route path="/flights" element={<Home />} />
+            <Route path="/my-reservations" element={<div><Reservations/></div>} />
         </Routes>
     );
 }

@@ -12,6 +12,8 @@ import { fetchFlights } from "../store/actions/flightAction";
 import { fetchAirlines } from "../store/actions/airlineAction";
 import { fetchAircraft } from "../store/actions/aircraftTypeAction";
 import { fetchDestinations } from "../store/actions/destinationAction";
+import { useLocation } from "react-router-dom";
+import { getFlightReservations } from "../store/actions/bookflightAction";
 
 
 
@@ -19,22 +21,30 @@ import { fetchDestinations } from "../store/actions/destinationAction";
 const calculateFlightDuration = (departureTime, arrivalTime) => {
   const departure = new Date(departureTime);
   const arrival = new Date(arrivalTime);
-  const duration = arrival - departure; // Süre milisaniye cinsindendir
-  return Math.floor(duration / (1000 * 60)); // Dakika cinsinden süre
+  const duration = arrival - departure; 
+  return Math.floor(duration / (1000 * 60));
 };
 
 const Home = () => {
+  const location = useLocation();
   const flights = useSelector(state => state.flightReducer.flights);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchFlights());
+    const params = new URLSearchParams(location.search);
+    const from = params.get('from');
+    const route = params.get('route');
+    const scheduleDate = params.get('scheduleDate');
+    const returnDate = params.get('returnDate');
+    const fromScheduleDate = params.get('fromScheduleDate'); 
+    const toScheduleDate = params.get('toScheduleDate'); 
+
+    dispatch(fetchFlights(from, route, scheduleDate, returnDate, fromScheduleDate, toScheduleDate)); 
     dispatch(fetchAirlines());
     dispatch(fetchAircraft());
-    dispatch(fetchDestinations())
-    
-  }, [dispatch]);
-
+    dispatch(fetchDestinations());
+    dispatch(getFlightReservations());
+  }, [dispatch, location.search]);
 
   return (
     <div className="flex flex-col sm:flex-row">
@@ -45,12 +55,13 @@ const Home = () => {
             {flights.map((flight, index) => (
               <FlightInfoCard
               key={index}
+              flight={flight}
               departureAirport={flight.departureAirport}
-              departureTime={flight.expectedTimeBoarding}
-              arrivalAirport={flight.arrivalAirport}
+              departureTime={flight.scheduleDateTime}
+              arrivalAirport={flight.destinationName}
               arrivalTime={flight.estimatedLandingTime}
               flightDuration={calculateFlightDuration(
-                flight.expectedTimeBoarding,
+                flight.scheduleDateTime,
                 flight.estimatedLandingTime
               )}
               price={800}

@@ -4,13 +4,13 @@ export const FETCH_FLIGHTS_REQUEST = 'FETCH_FLIGHTS_REQUEST';
 export const FETCH_FLIGHTS_SUCCESS = 'FETCH_FLIGHTS_SUCCESS';
 export const FETCH_FLIGHTS_FAILURE = 'FETCH_FLIGHTS_FAILURE';
 
-export const fetchFlights = () => {
+export const fetchFlights = (query) => {
   return async (dispatch) => {
     dispatch({ type: FETCH_FLIGHTS_REQUEST });
 
     try {
       console.log("API isteği başlatılıyor...");
-      const response = await api.get('/flights');
+      const response = await api.get('/flights', { params: query });
       
       dispatch({ type: FETCH_FLIGHTS_SUCCESS, payload: response.data });
       console.log("flights", response.data);
